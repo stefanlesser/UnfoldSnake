@@ -8,8 +8,11 @@ let package = Package(
     platforms: [.macOS("15")],
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
+        .library(
+            name: "SnakeLib",
+            targets: ["Snake"]),
         .executable(
-            name: "Snake",
+            name: "SnakeApp",
             targets: ["SwiftUISnakeMain"]),
     ],
     targets: [
@@ -19,8 +22,7 @@ let package = Package(
             name: "Snake"),
         .testTarget(
             name: "UnfoldSnakeTests",
-            dependencies: ["Snake"]
-        ),
+            dependencies: ["Snake"]),
         .target(
             name: "SwiftUISnake",
             dependencies: ["Snake"]),
