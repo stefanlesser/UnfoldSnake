@@ -22,6 +22,14 @@ func testFoodSpawnsAtRandomNonInitialSnakeLocation() {
     #expect(board.food.position != Position(x: 10, y: 10))
 }
 
+@Test("Random position generation")
+func testRandomPositionGeneration() {
+    let board = Board()
+    let randomPosition = board.randomPosition
+    #expect(randomPosition.x >= 0 && randomPosition.x < board.size.x)
+    #expect(randomPosition.y >= 0 && randomPosition.y < board.size.y)
+}
+
 @Test(
     "Verify correct assignment of .snake, .food, or .empty based on position checks for all board states"
 )
@@ -76,6 +84,32 @@ func testUpdateThrowsCollision() throws {
     #expect(throws: SnakeError.collision) {
         try board.update()
     }
+}
+
+@Test("`Board.update()` correctly handles the `.food` case.")
+func testUpdateHandlesFood() throws {
+    var board = Board()
+    let initialSnakeLength = board.snake.length
+    let initialFoodPosition = board.food.position
+    board.snake = Snake(body: [Position(x: initialFoodPosition.x - 1, y: initialFoodPosition.y)], direction: .right)
+
+    try board.update()
+
+    #expect(board.snake.length == initialSnakeLength + 1, "Snake should grow after eating food.")
+    #expect(board.food.position != initialFoodPosition, "Food should respawn after being eaten.")
+    #expect(board.isWithinBounds(position: board.food.position), "Food should respawn within board bounds.")
+}
+
+@Test("`Board.update()` correctly handles the `.food` case when the snake eats food and the new food position is not on the snake's body")
+func testUpdateHandlesFoodNewFoodPositionNotOnSnakeBody() throws {
+    var board = Board()
+    let initialFoodPosition = Position(x: 1, y: 0)
+    board.food = Food(position: initialFoodPosition)
+    board.snake = Snake(body: [Position(x: 0, y: 0)], direction: .right)
+
+    try board.update()
+
+    #expect(board.food.position != board.snake.head, "Food position shouldn't be at snake's head")
 }
 
 @Test("Board resets after collision")
