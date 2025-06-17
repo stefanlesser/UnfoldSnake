@@ -72,8 +72,8 @@ package struct BoardView: View {
                         .frame(width: 20, height: 20)
                         .foregroundColor(.green)
                         .position(
-                            x: CGFloat(position.x) * 20,
-                            y: CGFloat(position.y) * 20
+                            x: CGFloat(position.x) * 20 + 10,
+                            y: CGFloat(position.y) * 20 + 10
                         )
                 }
 
@@ -82,12 +82,12 @@ package struct BoardView: View {
                     .frame(width: 20, height: 20)
                     .foregroundColor(.red)
                     .position(
-                        x: CGFloat(foodPosition.x) * 20,
-                        y: CGFloat(foodPosition.y) * 20
+                        x: CGFloat(foodPosition.x) * 20 + 10,
+                        y: CGFloat(foodPosition.y) * 20 + 10
                     )
             }
             .frame(width: 320, height: 320)
-            .border(.black)
+            .border(Color.gray, width: 2)
         }
         .focusable()
         .focused($isFocused)
@@ -117,4 +117,5 @@ package struct BoardView: View {
 
 #Preview {
     BoardView()
+        .padding()
 }
