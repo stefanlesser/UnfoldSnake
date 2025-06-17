@@ -11,7 +11,7 @@ class GameModel {
 
     init() {
         // Set up timer that updates model regularly
-        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
+        timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { [weak self] _ in
             Task { @MainActor in
                 self?.updateModel()
             }
@@ -86,6 +86,7 @@ package struct BoardView: View {
                         y: CGFloat(foodPosition.y) * 20 + 10
                     )
             }
+            .scaleEffect(x: 1, y: -1) // translate coordinate system from game to SwiftUI
             .frame(width: 320, height: 320)
             .border(Color.gray, width: 2)
         }
