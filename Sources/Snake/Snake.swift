@@ -1,5 +1,5 @@
 // A VECTOR represents a 2D position, velocity, or size.
-public struct Vector: Equatable, Hashable {
+public struct Vector: Equatable, Hashable, Sendable {
     public var x: Int
     public var y: Int
 
@@ -18,21 +18,21 @@ typealias Velocity = Vector
 typealias Size = Vector
 
 // A DIRECTION represents where the SNAKE is moving.
-public enum Direction: Equatable {
+public enum Direction: CaseIterable, Equatable, Sendable {
     // There are four possible DIRECTIONS.
-    case up, down, left, right
+    case up, right, down, left
 
     // Each DIRECTION can be converted into a VELOCITY vector.
     var velocity: Velocity {
         switch self {
         case .up:
             return Velocity(x: 0, y: 1)
+        case .right:
+            return Velocity(x: 1, y: 0)
         case .down:
             return Velocity(x: 0, y: -1)
         case .left:
             return Velocity(x: -1, y: 0)
-        case .right:
-            return Velocity(x: 1, y: 0)
         }
     }
 }
