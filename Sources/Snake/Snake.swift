@@ -111,8 +111,7 @@ public struct Board {
         snake = Snake(body: [Position(x: 10, y: 10)], direction: .right)
 
         // FOOD spawns at a random POSITION.
-        let randomPosition = Position.random(0..<size.x, 0..<size.y)
-        food = Food(position: randomPosition)
+        food = Food(position: Position.random(0..<size.x, 0..<size.y))
     }
 
     // A POSITION is either on the BOARD or not.
@@ -125,12 +124,10 @@ public struct Board {
         guard isWithinBounds(position: position) else {
             throw SnakeError.outOfBounds
         }
-        if food.position == position {
-            return .food
-        } else if snake.body.contains(position) {
-            return .snake
-        } else {
-            return .empty
+        return switch position {
+        case food.position: .food
+        case _ where snake.body.contains(position): .snake
+        default: .empty
         }
     }
 
