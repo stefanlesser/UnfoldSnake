@@ -1,4 +1,5 @@
 import Testing
+
 @testable import Snake
 
 @Test("Board initializes with a default size (16, 16)")
@@ -25,7 +26,7 @@ func testFoodSpawnsAtRandomNonInitialSnakeLocation() {
 @Test("Random position generation")
 func testRandomPositionGeneration() {
     let board = Board()
-    let randomPosition = board.randomPosition
+    let randomPosition = Position.random(0..<board.size.x, 0..<board.size.y)
     #expect(randomPosition.x >= 0 && randomPosition.x < board.size.x)
     #expect(randomPosition.y >= 0 && randomPosition.y < board.size.y)
 }
@@ -91,16 +92,21 @@ func testUpdateHandlesFood() throws {
     var board = Board()
     let initialSnakeLength = board.snake.length
     let initialFoodPosition = board.food.position
-    board.snake = Snake(body: [Position(x: initialFoodPosition.x - 1, y: initialFoodPosition.y)], direction: .right)
+    board.snake = Snake(
+        body: [Position(x: initialFoodPosition.x - 1, y: initialFoodPosition.y)], direction: .right)
 
     try board.update()
 
     #expect(board.snake.length == initialSnakeLength + 1, "Snake should grow after eating food.")
     #expect(board.food.position != initialFoodPosition, "Food should respawn after being eaten.")
-    #expect(board.isWithinBounds(position: board.food.position), "Food should respawn within board bounds.")
+    #expect(
+        board.isWithinBounds(position: board.food.position),
+        "Food should respawn within board bounds.")
 }
 
-@Test("`Board.update()` correctly handles the `.food` case when the snake eats food and the new food position is not on the snake's body")
+@Test(
+    "`Board.update()` correctly handles the `.food` case when the snake eats food and the new food position is not on the snake's body"
+)
 func testUpdateHandlesFoodNewFoodPositionNotOnSnakeBody() throws {
     var board = Board()
     let initialFoodPosition = Position(x: 1, y: 0)

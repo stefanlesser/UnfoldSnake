@@ -6,6 +6,10 @@ public struct Vector: Equatable, Hashable, Sendable {
     static func + (_ left: Vector, _ right: Vector) -> Vector {
         Vector(x: left.x + right.x, y: left.y + right.y)
     }
+
+    static func random(_ rangeX: Range<Int>, _ rangeY: Range<Int>) -> Vector {
+        Vector(x: rangeX.randomElement()!, y: rangeY.randomElement()!)
+    }
 }
 
 // A POSITION represents a point coordinate in 2D space.
@@ -99,18 +103,6 @@ public struct Board {
     // There's FOOD on the BOARD.
     public var food: Food
 
-    // Pick a random POSITION on the BOARD.
-    var randomPosition: Position {
-        Self.randomPosition(in: size)
-    }
-
-    // Generate a random position for a given size
-    static func randomPosition(in size: Size) -> Position {
-        let x = Int.random(in: 0..<size.x)
-        let y = Int.random(in: 0..<size.y)
-        return Position(x: x, y: y)
-    }
-
     public init() {
         // The BOARD size is (16, 16).
         size = Size(x: 16, y: 16)
@@ -119,7 +111,8 @@ public struct Board {
         snake = Snake(body: [Position(x: 10, y: 10)], direction: .right)
 
         // FOOD spawns at a random POSITION.
-        food = Food(position: Board.randomPosition(in: size))
+        let randomPosition = Position.random(0..<size.x, 0..<size.y)
+        food = Food(position: randomPosition)
     }
 
     // A POSITION is either on the BOARD or not.
@@ -152,7 +145,7 @@ public struct Board {
         switch try query(position: snake.nextPosition) {
         case .snake:
             // The SNAKE dies if it collides with itself.
-            self = Board() // Reset the board
+            self = Board()  // Reset the board
             throw SnakeError.collision
         case .food:
             // Eating FOOD makes the SNAKE grow.
@@ -161,7 +154,7 @@ public struct Board {
             // FOOD respawns at a random empty POSITION.
             var position: Position
             repeat {
-                position = randomPosition
+                position = Position.random(0..<size.x, 0..<size.y)
             } while try query(position: position) != .empty
             food = Food(position: position)
         case .empty:
